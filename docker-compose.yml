@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  bee-api:
+    build: ./bee-fastapi
+    ports:
+      - "8001:8001"
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./bee-fastapi:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8001 --reload
+
+  nextjs:
+    build: ./algoabcapp
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_BEE_API=http://localhost:8001
+    volumes:
+      - ./algoabcapp:/app
+      - /app/node_modules
+    command: npm run dev
