@@ -23,6 +23,7 @@ export interface ExperimentResultSeries {
   iteration: number;
   bestFitness: number;
   avgFitness?: number;
+  stdFitness?: number;
 }
 
 export interface Experiment {

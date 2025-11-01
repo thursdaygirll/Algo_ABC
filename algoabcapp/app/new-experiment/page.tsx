@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { BeeParams, ExperimentInput, InputMode } from '@/types/experiment';
 import { useExperimentStore } from '@/lib/store';
-import { runBeeExperiment } from '@/lib/api';
+import { runBeeExperiment, saveExperiment } from '@/lib/api';
+import { saveExperimentLocally } from '@/lib/persistence';
 import { parseCSV, parseExcel, ParsedData } from '@/lib/csv';
 import { getPreloadedDataset } from '@/lib/datasets';
 import ExcelUploader from '@/components/inputs/ExcelUploader';
@@ -120,14 +121,24 @@ export default function NewExperimentPage() {
 
         const iterations = params.iterations || 50;
         let bestFitness = 100.0;
-        const resultSeries: { iteration: number; bestFitness: number }[] = [];
+        const resultSeries: { iteration: number; bestFitness: number; avgFitness?: number; stdFitness?: number }[] = [];
 
         for (let i = 1; i <= iterations; i++) {
           const improvement = (Math.random() * (0.5 - 0.1) + 0.1) * (100 / iterations);
           bestFitness = Math.max(0, bestFitness - improvement);
           const noise = (Math.random() * 0.02) - 0.01;
           bestFitness = Math.max(0, bestFitness + noise);
-          resultSeries.push({ iteration: i, bestFitness: parseFloat(bestFitness.toFixed(6)) });
+
+          // Simulate population average and std (average higher than best, small spread)
+          const avgFitness = Math.max(bestFitness + Math.random() * 1.0, bestFitness);
+          const stdFitness = Math.max(0.001, Math.random() * 0.2);
+
+          resultSeries.push({
+            iteration: i,
+            bestFitness: parseFloat(bestFitness.toFixed(6)),
+            avgFitness: parseFloat(avgFitness.toFixed(6)),
+            stdFitness: parseFloat(stdFitness.toFixed(6))
+          });
         }
 
         const initialFitness = resultSeries.length ? resultSeries[0].bestFitness : 100.0;
@@ -167,6 +178,20 @@ export default function NewExperimentPage() {
       };
 
       addExperiment(experiment);
+      // Persist locally first for immediate durability
+      try {
+        await saveExperimentLocally(experiment);
+      } catch (e) {
+        console.warn('Failed to save experiment locally:', e);
+      }
+
+      // Try server save (best-effort)
+      try {
+        await saveExperiment(experiment);
+      } catch (e) {
+        console.warn('Failed to save experiment to backend:', e);
+      }
+
       router.push(`/experiments/${experiment.id}`);
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Failed to run experiment');

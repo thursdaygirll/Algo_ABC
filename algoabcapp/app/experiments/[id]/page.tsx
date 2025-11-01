@@ -104,7 +104,8 @@ export default function ExperimentResultsPage() {
             <div className="card bg-base-100 shadow-xl">
               <div className="card-body">
                 <LineChart
-                  data={experiment.resultSeries}
+          data={experiment.resultSeries}
+          showAverage={true}
                   title="Fitness Convergence Over Time"
                   height={300}
                 />

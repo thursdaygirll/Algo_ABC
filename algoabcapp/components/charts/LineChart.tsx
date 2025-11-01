@@ -22,6 +22,7 @@ export default function LineChart({
   const iterations = data.map(d => d.iteration);
   const bestFitness = data.map(d => d.bestFitness);
   const avgFitness = data.map(d => d.avgFitness || d.bestFitness);
+  const stdFitness = data.map(d => d.stdFitness || 0);
 
   const options: ApexOptions = {
     chart: {
@@ -60,7 +61,8 @@ export default function LineChart({
     },
     colors: ['#3b82f6', '#ef4444'],
     stroke: {
-      width: 2,
+      // support multiple series stroke widths when rendering band
+      width: [0, 2, 0, 2],
       curve: 'smooth'
     },
     markers: {
@@ -87,19 +89,20 @@ export default function LineChart({
     }
   };
 
-  const series = [
-    {
-      name: 'Best Fitness',
-      data: bestFitness
-    }
-  ];
+  // build series: Upper band, Average, Lower band, Best
+  const series: any[] = [];
+  const hasAvg = data.some(d => d.avgFitness !== undefined);
+  if (showAverage && hasAvg) {
+    const upper = avgFitness.map((a, i) => +(a + stdFitness[i]).toFixed(6));
+    const lower = avgFitness.map((a, i) => +(Math.max(0, a - stdFitness[i])).toFixed(6));
 
-  if (showAverage && data.some(d => d.avgFitness !== undefined)) {
-    series.push({
-      name: 'Average Fitness',
-      data: avgFitness
-    });
+    series.push({ name: 'Upper', data: upper });
+    series.push({ name: 'Average Fitness', data: avgFitness });
+    series.push({ name: 'Lower', data: lower });
   }
+
+  // Best is always shown
+  series.push({ name: 'Best Fitness', data: bestFitness });
 
   return (
     <div className="w-full">

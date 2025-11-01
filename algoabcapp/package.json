@@ -24,7 +24,7 @@
     "@types/papaparse": "^5.3.14",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "daisyui": "^5.3.10",
+    "daisyui": "^5.3.11",
     "eslint": "^9",
     "eslint-config-next": "16.0.0",
     "tailwindcss": "^4.1.16",

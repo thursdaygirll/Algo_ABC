@@ -17,6 +17,25 @@ export async function runBeeExperiment(body: ExperimentRunRequest): Promise<Expe
   return res.json();
 }
 
+export async function saveExperiment(experiment: any) {
+  const res = await fetch(`${BEE_API_URL}/experiments`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(experiment),
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(err || 'Failed to save experiment');
+  }
+  return res.json();
+}
+
+export async function fetchExperiments() {
+  const res = await fetch(`${BEE_API_URL}/experiments`);
+  if (!res.ok) return [];
+  return res.json();
+}
+
 export async function checkBeeAPIHealth(): Promise<boolean> {
   try {
     const res = await fetch(`${BEE_API_URL}/health`);

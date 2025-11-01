@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import ThemeScript from "@/components/ThemeScript";
+import ExperimentsHydrator from "@/components/ExperimentsHydrator";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,6 +32,7 @@ export default function RootLayout({
       >
         <ThemeScript />
         <Navbar />
+        <ExperimentsHydrator />
         {children}
       </body>
     </html>

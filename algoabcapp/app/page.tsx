@@ -27,14 +27,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div>
-            <div className="grid grid-cols-2 gap-4">
-              <StatCard title="Experiments" value={0} subtitle="Recorded runs" />
-              <StatCard title="Avg duration" value={'—'} subtitle="ms" />
-              <StatCard title="Best fitness" value={'—'} subtitle="last run" />
-              <StatCard title="Datasets" value={3} subtitle="preloaded" />
-            </div>
-          </div>
+          
         </section>
 
         {/* Features */}
