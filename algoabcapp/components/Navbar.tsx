@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import ThemeController from './ThemeController';
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -11,11 +10,10 @@ export default function Navbar() {
     { href: '/', label: 'Home' },
     { href: '/new-experiment', label: 'New Experiment' },
     { href: '/experiments', label: 'Previous Experiments' },
-    { href: '/theme-demo', label: 'Theme Demo' },
   ];
 
   return (
-    <div className="navbar bg-base-100 shadow-lg">
+    <div className="navbar bg-black shadow-lg">
       <div className="navbar-start">
         <Link href="/" className="btn btn-ghost text-xl">
           🐝 Bee Algorithm
@@ -38,9 +36,6 @@ export default function Navbar() {
       </div>
       
       <div className="navbar-end">
-        <div className="hidden lg:flex items-center gap-4">
-          <ThemeController />
-        </div>
         
         <div className="dropdown dropdown-end">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -59,12 +54,7 @@ export default function Navbar() {
                 </Link>
               </li>
             ))}
-            <li className="divider"></li>
-            <li>
-              <div className="flex justify-center">
-                <ThemeController />
-              </div>
-            </li>
+            
           </ul>
         </div>
       </div>
