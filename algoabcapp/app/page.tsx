@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import FeatureCard from '@/components/cards/FeatureCard';
 import StatCard from '@/components/StatCard';
+import { Rocket, Folder, BarChart2, Download } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -36,25 +37,25 @@ export default function Home() {
 
           <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             <FeatureCard
-              icon={'🚀'}
+              icon={<Rocket className="inline-block w-12 h-12" />}
               title={'Run experiments'}
               description={'Configure ABC parameters and run optimization jobs locally or via the API.'}
             />
 
             <FeatureCard
-              icon={'📁'}
+              icon={<Folder className="inline-block w-12 h-12" />}
               title={'Upload datasets'}
               description={'Upload Excel or CSV files, or use built-in sample datasets to get started.'}
             />
 
             <FeatureCard
-              icon={'📊'}
+              icon={<BarChart2 className="inline-block w-12 h-12" />}
               title={'Interactive charts'}
               description={'View convergence, KPIs and detailed result series with ApexCharts.'}
             />
 
             <FeatureCard
-              icon={'⬇️'}
+              icon={<Download className="inline-block w-12 h-12" />}
               title={'Export results'}
               description={'Download results as CSV or Excel for further analysis and reporting.'}
             />

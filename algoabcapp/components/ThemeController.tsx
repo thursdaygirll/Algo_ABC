@@ -7,30 +7,51 @@ export default function ThemeController() {
   const [currentTheme, setCurrentTheme] = useState<Theme>('light');
   const [isDark, setIsDark] = useState(false);
 
+  // Keep native inputs in sync so DaisyUI's CSS-only theme-controller can pick them up
+  const syncThemeInputs = (theme: Theme) => {
+    if (typeof document === 'undefined') return;
+    const inputs = Array.from(document.querySelectorAll<HTMLInputElement>('input.theme-controller'));
+    inputs.forEach((inp) => {
+      if (inp.type === 'radio') {
+        inp.checked = inp.value === theme;
+      } else if (inp.type === 'checkbox') {
+        // For checkbox controls that represent a theme when checked, set checked accordingly
+        inp.checked = inp.value === theme;
+      }
+    });
+  };
+
   useEffect(() => {
     // Initialize theme from storage or system preference
     const savedTheme = getThemeFromStorage();
     setCurrentTheme(savedTheme);
+    // Treat 'dark' as the dark theme and 'light' as the light theme
     setIsDark(savedTheme === 'dark');
     applyTheme(savedTheme);
+    // ensure DOM inputs with class theme-controller reflect the saved theme
+    syncThemeInputs(savedTheme);
   }, []);
 
   const handleThemeChange = (theme: Theme) => {
     setCurrentTheme(theme);
+    // treat 'dark' as the dark theme
     setIsDark(theme === 'dark');
     saveThemeToStorage(theme);
     applyTheme(theme);
+    // sync native inputs to match the new theme so DaisyUI CSS selectors pick it up
+    syncThemeInputs(theme);
   };
 
   const toggleDarkMode = () => {
-    const newTheme = isDark ? 'light' : 'dark';
+    // Toggle between light and dark themes
+    const newTheme: Theme = isDark ? 'light' : 'dark';
     handleThemeChange(newTheme);
   };
 
   return (
     <div className="flex items-center gap-2">
       {/* Quick Dark/Light Toggle */}
-      <label className="flex cursor-pointer gap-2 items-center">
+  <label className="flex cursor-pointer gap-2 items-center">
         <svg 
           xmlns="http://www.w3.org/2000/svg" 
           width="20" 
@@ -47,11 +68,14 @@ export default function ThemeController() {
           <path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/>
         </svg>
         
-        <input 
-          type="checkbox" 
+        <input
+          type="checkbox"
           checked={isDark}
           onChange={toggleDarkMode}
-          className="toggle toggle-sm"
+          value="dark"
+          aria-label="Toggle theme"
+          /* DaisyUI: theme-controller makes this input control page theme via CSS */
+          className="toggle toggle-sm theme-controller"
         />
         
         <svg 

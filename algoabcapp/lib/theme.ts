@@ -1,6 +1,8 @@
 export type Theme = 
   | 'light' 
   | 'dark' 
+  | 'bumblebee'
+  | 'sunset'
   | 'synthwave' 
   | 'retro' 
   | 'cyberpunk' 
@@ -20,6 +22,8 @@ export type Theme =
   | 'winter';
 
 export const availableThemes: { value: Theme; label: string; description: string }[] = [
+  { value: 'bumblebee', label: 'Bumblebee', description: 'Light bumblebee theme' },
+  { value: 'sunset', label: 'Sunset', description: 'Warm sunset dark theme' },
   { value: 'light', label: 'Light', description: 'Clean and bright' },
   { value: 'dark', label: 'Dark', description: 'Easy on the eyes' },
   { value: 'synthwave', label: 'Synthwave', description: 'Neon cyberpunk vibes' },

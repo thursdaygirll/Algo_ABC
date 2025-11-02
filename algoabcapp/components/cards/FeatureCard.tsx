@@ -1,5 +1,7 @@
+import { ReactNode } from 'react';
+
 interface FeatureCardProps {
-  icon: string;
+  icon: ReactNode;
   title: string;
   description: string;
 }
