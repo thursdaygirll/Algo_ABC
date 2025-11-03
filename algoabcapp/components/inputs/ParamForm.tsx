@@ -33,9 +33,9 @@ export default function ParamForm({ onSubmitAction, isLoading = false }: ParamFo
     <form onSubmit={handleSubmit} className="space-y-4">
       <h3 className="text-lg font-medium mb-4">Algorithm Parameters</h3>
       
-      <div className="form-control">
-        <label className="label">
-          <span className="label-text">Feed Limit</span>
+      <div className="form-control text-stone-700">
+        <label className="label text-stone-700">
+          <span className="label-text text-stone-700">Feed Limit</span>
         </label>
         <input
           type="number"
@@ -45,13 +45,13 @@ export default function ParamForm({ onSubmitAction, isLoading = false }: ParamFo
           className="input input-bordered"
           required
         />
-        <label className="label">
+        <label className="label text-stone-700">
           <span className="label-text-alt">Maximum attempts before scout phase</span>
         </label>
       </div>
 
-      <div className="form-control">
-        <label className="label">
+      <div className="form-control text-stone-700">
+        <label className="label text-stone-700">
           <span className="label-text">Number of Bees</span>
         </label>
         <input
@@ -62,13 +62,13 @@ export default function ParamForm({ onSubmitAction, isLoading = false }: ParamFo
           className="input input-bordered"
           required
         />
-        <label className="label">
+        <label className="label text-stone-700">
           <span className="label-text-alt">Population size for the algorithm</span>
         </label>
       </div>
 
-      <div className="form-control">
-        <label className="label">
+      <div className="form-control text-stone-700">
+        <label className="label text-stone-700">
           <span className="label-text">Iterations</span>
         </label>
         <input
@@ -80,13 +80,13 @@ export default function ParamForm({ onSubmitAction, isLoading = false }: ParamFo
           className="input input-bordered"
           required
         />
-        <label className="label">
+        <label className="label text-stone-700">
           <span className="label-text-alt">Maximum number of iterations (1-1000)</span>
         </label>
       </div>
 
-      <div className="form-control">
-        <label className="label">
+      <div className="form-control text-stone-700">
+        <label className="label text-stone-700">
           <span className="label-text">Random Seed (Optional)</span>
         </label>
         <input
@@ -97,12 +97,12 @@ export default function ParamForm({ onSubmitAction, isLoading = false }: ParamFo
           className="input input-bordered"
           placeholder="Leave empty for random"
         />
-        <label className="label">
+        <label className="label text-stone-700">
           <span className="label-text-alt">For reproducible results</span>
         </label>
       </div>
 
-      <div className="form-control mt-6">
+      <div className="form-control mt-6 text-stone-700">
         <button
           type="submit"
           className={`btn btn-primary ${isLoading ? 'loading' : ''}`}

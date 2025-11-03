@@ -42,3 +42,8 @@ p {
   /* text-stone-700 */
   color: #44403c;
 }
+
+/* Ensure all H3 headings are black across themes */
+h3 {
+  color: #000;
+}
