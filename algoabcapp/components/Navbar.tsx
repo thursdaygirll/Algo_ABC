@@ -2,14 +2,15 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { Home, CirclePlus, Folder } from 'lucide-react';
 
 export default function Navbar() {
   const pathname = usePathname();
 
   const navItems = [
-    { href: '/', label: 'Home' },
-    { href: '/new-experiment', label: 'New Experiment' },
-    { href: '/experiments', label: 'Previous Experiments' },
+    { href: '/', label: 'Home', icon: <Home className="w-5 h-5" /> },
+    { href: '/new-experiment', label: 'New Experiment', icon: <CirclePlus className="w-5 h-5" /> },
+    { href: '/experiments', label: 'Previous Experiments', icon: <Folder className="w-5 h-5" /> },
   ];
 
   return (
@@ -26,9 +27,10 @@ export default function Navbar() {
             <li key={item.href}>
               <Link 
                 href={item.href}
-                className={pathname === item.href ? 'active' : ''}
+                title={item.label}
+                className={`btn btn-sm ${pathname === item.href ? 'btn-primary' : 'btn-ghost'}`}
               >
-                {item.label}
+                {item.icon}
               </Link>
             </li>
           ))}
@@ -48,9 +50,13 @@ export default function Navbar() {
               <li key={item.href}>
                 <Link 
                   href={item.href}
-                  className={pathname === item.href ? 'active' : ''}
+                  title={item.label}
+                  className={`btn w-full justify-start ${pathname === item.href ? 'btn-primary' : 'btn-ghost'}`}
                 >
-                  {item.label}
+                  <div className="flex items-center gap-3">
+                    {item.icon}
+                    <span>{item.label}</span>
+                  </div>
                 </Link>
               </li>
             ))}
