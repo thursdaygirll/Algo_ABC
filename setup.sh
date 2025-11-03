@@ -47,8 +47,8 @@ check_requirements() {
         NODE_VERSION=$(node --version | cut -d'v' -f2)
         print_success "Node.js found: v$NODE_VERSION"
         
-        # Check if version is 18+
-        if ! node -e "process.exit(process.version.split('.')[0] >= 18 ? 0 : 1)" 2>/dev/null; then
+        # Check if version is 18+ (use process.versions.node to avoid the leading 'v')
+        if ! node -e "const major = Number(process.versions.node.split('.')[0]); process.exit(Number.isFinite(major) && major >= 18 ? 0 : 1);" 2>/dev/null; then
             print_error "Node.js version 18+ required. Current: v$NODE_VERSION"
             print_status "Please install Node.js 18+ from https://nodejs.org/"
             exit 1

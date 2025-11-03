@@ -4,11 +4,12 @@ import { useState } from 'react';
 import { BeeParams } from '@/types/experiment';
 
 interface ParamFormProps {
-  onSubmit: (params: BeeParams) => void;
+  // Named with "Action" suffix to avoid Next.js serializable-props rule confusion in client components
+  onSubmitAction: (params: BeeParams) => void;
   isLoading?: boolean;
 }
 
-export default function ParamForm({ onSubmit, isLoading = false }: ParamFormProps) {
+export default function ParamForm({ onSubmitAction, isLoading = false }: ParamFormProps) {
   const [params, setParams] = useState<BeeParams>({
     feedLimit: 10,
     numBees: 20,
@@ -18,10 +19,10 @@ export default function ParamForm({ onSubmit, isLoading = false }: ParamFormProp
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(params);
+    onSubmitAction(params);
   };
 
-  const updateParam = (key: keyof BeeParams, value: string | number) => {
+  const updateParam = (key: keyof BeeParams, value: string | number | undefined) => {
     setParams(prev => ({
       ...prev,
       [key]: value === '' ? undefined : value

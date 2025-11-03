@@ -3,10 +3,11 @@ import { getExperimentById } from '@/lib/fs';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const experiment = await getExperimentById(params.id);
+    const { id } = await context.params;
+    const experiment = await getExperimentById(id);
     
     if (!experiment) {
       return NextResponse.json(

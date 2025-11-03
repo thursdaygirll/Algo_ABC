@@ -1,6 +1,7 @@
 'use client';
 
 import { InputMode } from '@/types/experiment';
+import { Database, Upload, Sliders, Pencil, Rocket, Check } from 'lucide-react';
 
 interface ExperimentStepsProps {
   currentStep: number;
@@ -22,35 +23,35 @@ export default function ExperimentSteps({
       id: 1,
       title: 'Choose Data Input',
       description: 'Select how to provide your data',
-      icon: '📊',
+      icon: <Database className="w-4 h-4" />,
       status: currentStep >= 1 ? (inputMode ? 'completed' : 'current') : 'pending'
     },
     {
       id: 2,
       title: 'Upload/Configure Data',
       description: 'Provide your dataset',
-      icon: '📁',
+      icon: <Upload className="w-4 h-4" />,
       status: currentStep >= 2 ? (hasData ? 'completed' : 'current') : 'pending'
     },
     {
       id: 3,
       title: 'Set Parameters',
       description: 'Configure algorithm settings',
-      icon: '⚙️',
+      icon: <Sliders className="w-4 h-4" />,
       status: currentStep >= 3 ? 'completed' : 'pending'
     },
     {
       id: 4,
       title: 'Name Experiment',
       description: 'Give your experiment a name',
-      icon: '✏️',
+      icon: <Pencil className="w-4 h-4" />,
       status: currentStep >= 4 ? (hasName ? 'completed' : 'current') : 'pending'
     },
     {
       id: 5,
       title: 'Run Experiment',
       description: 'Execute the Bee Algorithm',
-      icon: '🚀',
+      icon: <Rocket className="w-4 h-4" />,
       status: isRunning ? 'running' : (currentStep >= 5 ? 'completed' : 'pending')
     }
   ];
@@ -79,7 +80,9 @@ export default function ExperimentSteps({
     }
     if (step.status === 'completed') {
       return (
-        <span className="step-icon">✓</span>
+        <span className="step-icon">
+          <Check className="w-4 h-4" />
+        </span>
       );
     }
     return (
@@ -89,7 +92,7 @@ export default function ExperimentSteps({
 
   const getStepDataContent = (step: any) => {
     if (step.status === 'completed') {
-      return '✓';
+      return undefined; // Using Lucide Check icon instead of text checkmark
     }
     if (step.status === 'running') {
       return '⟳';

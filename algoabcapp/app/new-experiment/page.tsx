@@ -363,7 +363,7 @@ export default function NewExperimentPage() {
                 </div>
 
                 <ParamForm
-                  onSubmit={handleRunExperiment}
+                  onSubmitAction={handleRunExperiment}
                   isLoading={isLoading}
                 />
               </div>
