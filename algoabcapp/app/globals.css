@@ -26,3 +26,19 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Ensure all H1 headings are black across themes */
+h1 {
+  color: #000;
+}
+
+/* Ensure all H2 headings are black across themes */
+h2 {
+  color: #000;
+}
+
+/* Set all paragraph text to Tailwind's stone-700 equivalent */
+p {
+  /* text-stone-700 */
+  color: #44403c;
+}

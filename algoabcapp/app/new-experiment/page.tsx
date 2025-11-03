@@ -241,21 +241,21 @@ export default function NewExperimentPage() {
                 <h2 className="card-title mb-4">Data Input</h2>
                 
                 {/* Input Mode Selection */}
-                <div className="tabs tabs-boxed mb-6">
+                <div className="mb-6 flex flex-wrap gap-2">
                   <button
-                    className={`tab ${inputMode === 'excel' ? 'tab-active' : ''}`}
+                    className={`btn ${inputMode === 'excel' ? 'btn-warning' : 'bg-base-200 text-base-content border border-base-300 hover:bg-base-300'}`}
                     onClick={() => handleInputModeChange('excel')}
                   >
                     Upload File
                   </button>
                   <button
-                    className={`tab ${inputMode === 'preloaded' ? 'tab-active' : ''}`}
+                    className={`btn ${inputMode === 'preloaded' ? 'btn-warning' : 'bg-base-200 text-base-content border border-base-300 hover:bg-base-300'}`}
                     onClick={() => handleInputModeChange('preloaded')}
                   >
                     Preloaded
                   </button>
                   <button
-                    className={`tab ${inputMode === 'manual' ? 'tab-active' : ''}`}
+                    className={`btn ${inputMode === 'manual' ? 'btn-warning' : 'bg-base-200 text-base-content border border-base-300 hover:bg-base-300'}`}
                     onClick={() => handleInputModeChange('manual')}
                   >
                     Manual
@@ -350,7 +350,7 @@ export default function NewExperimentPage() {
                 
                 <div className="form-control mb-4">
                   <label className="label">
-                    <span className="label-text">Experiment Name</span>
+                    <span className="label-text text-stone-700">Experiment Name</span>
                   </label>
                   <input
                     type="text"
