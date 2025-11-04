@@ -344,28 +344,30 @@ export default function NewExperimentPage() {
 
           {/* Right Pane - Parameters */}
           <div className="space-y-6">
-            <div className="card bg-base-100 shadow-xl border border-base-300">
+            <div className="card bg-base-200 border border-base-300 rounded-box p-4 w-full">
               <div className="card-body">
                 <h2 className="card-title mb-4">Experiment Details</h2>
-                
-                <div className="form-control mb-4">
-                  <label className="label">
-                    <span className="label-text text-base-content/70">Experiment Name</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Enter experiment name"
-                    value={experimentName}
-                    onChange={(e) => handleExperimentNameChange(e.target.value)}
-                    className="input input-bordered"
-                    required
-                  />
-                </div>
 
-                <ParamForm
-                  onSubmitAction={handleRunExperiment}
-                  isLoading={isLoading}
-                />
+                  <div className="form-control mb-2">
+                    <label className="label pb-1">
+                      <span className="label-text">Experiment Name</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter experiment name"
+                      value={experimentName}
+                      onChange={(e) => handleExperimentNameChange(e.target.value)}
+                      className="input input-bordered w-full"
+                      required
+                    />
+                    
+                  </div>
+
+                  <ParamForm
+                    onSubmitAction={handleRunExperiment}
+                    isLoading={isLoading}
+                  />
+          
               </div>
             </div>
           </div>

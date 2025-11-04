@@ -31,27 +31,25 @@ export default function ParamForm({ onSubmitAction, isLoading = false }: ParamFo
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <h3 className="text-lg font-medium mb-4">Algorithm Parameters</h3>
-      
-      <div className="form-control text-stone-700">
-        <label className="label text-stone-700">
-          <span className="label-text text-stone-700">Feed Limit</span>
+      <div className="form-control">
+        <label className="label pb-1">
+          <span className="label-text">Feed Limit</span>
         </label>
         <input
           type="number"
           min="1"
           value={params.feedLimit}
           onChange={(e) => updateParam('feedLimit', parseInt(e.target.value) || 1)}
-          className="input input-bordered"
+          className="input input-bordered w-full"
           required
         />
-        <label className="label text-stone-700">
+        <label className="label pt-1">
           <span className="label-text-alt">Maximum attempts before scout phase</span>
         </label>
       </div>
 
-      <div className="form-control text-stone-700">
-        <label className="label text-stone-700">
+      <div className="form-control">
+        <label className="label pb-1">
           <span className="label-text">Number of Bees</span>
         </label>
         <input
@@ -59,16 +57,16 @@ export default function ParamForm({ onSubmitAction, isLoading = false }: ParamFo
           min="1"
           value={params.numBees}
           onChange={(e) => updateParam('numBees', parseInt(e.target.value) || 1)}
-          className="input input-bordered"
+          className="input input-bordered w-full"
           required
         />
-        <label className="label text-stone-700">
+        <label className="label pt-1">
           <span className="label-text-alt">Population size for the algorithm</span>
         </label>
       </div>
 
-      <div className="form-control text-stone-700">
-        <label className="label text-stone-700">
+      <div className="form-control">
+        <label className="label pb-1">
           <span className="label-text">Iterations</span>
         </label>
         <input
@@ -77,16 +75,16 @@ export default function ParamForm({ onSubmitAction, isLoading = false }: ParamFo
           max="1000"
           value={params.iterations}
           onChange={(e) => updateParam('iterations', parseInt(e.target.value) || 1)}
-          className="input input-bordered"
+          className="input input-bordered w-full"
           required
         />
-        <label className="label text-stone-700">
+        <label className="label pt-1">
           <span className="label-text-alt">Maximum number of iterations (1-1000)</span>
         </label>
       </div>
 
-      <div className="form-control text-stone-700">
-        <label className="label text-stone-700">
+      <div className="form-control">
+        <label className="label pb-1">
           <span className="label-text">Random Seed (Optional)</span>
         </label>
         <input
@@ -94,18 +92,18 @@ export default function ParamForm({ onSubmitAction, isLoading = false }: ParamFo
           min="0"
           value={params.seed || ''}
           onChange={(e) => updateParam('seed', e.target.value === '' ? undefined : parseInt(e.target.value))}
-          className="input input-bordered"
+          className="input input-bordered w-full"
           placeholder="Leave empty for random"
         />
-        <label className="label text-stone-700">
+        <label className="label pt-1">
           <span className="label-text-alt">For reproducible results</span>
         </label>
       </div>
 
-      <div className="form-control mt-6 text-stone-700">
+      <div className="form-control mt-4">
         <button
           type="submit"
-          className={`btn btn-primary ${isLoading ? 'loading' : ''}`}
+          className={`btn btn-neutral ${isLoading ? 'loading' : ''}`}
           disabled={isLoading}
         >
           {isLoading ? 'Running...' : 'Run Experiment'}
