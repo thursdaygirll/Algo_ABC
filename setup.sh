@@ -134,13 +134,35 @@ install_backend() {
         exit 1
     fi
     
-    # Install dependencies
-    if pip3 install -r requirements.txt; then
-        print_success "Backend dependencies installed successfully"
+    # Create and use a python virtual environment to avoid system-managed pip issues
+    VENV_DIR=".venv"
+    if [ ! -d "$VENV_DIR" ]; then
+        print_status "Creating Python virtual environment in bee-fastapi/$VENV_DIR..."
+        if python3 -m venv "$VENV_DIR"; then
+            print_success "Virtual environment created: bee-fastapi/$VENV_DIR"
+        else
+            print_error "Failed to create virtual environment"
+            exit 1
+        fi
     else
-        print_error "Failed to install backend dependencies"
+        print_warning "Virtual environment already exists: bee-fastapi/$VENV_DIR"
+    fi
+
+    # Activate the venv for the duration of this script
+    # shellcheck disable=SC1091
+    source "$VENV_DIR/bin/activate"
+
+    # Upgrade pip and install requirements inside the venv
+    if pip install --upgrade pip setuptools wheel && pip install -r requirements.txt; then
+        print_success "Backend dependencies installed successfully in $VENV_DIR"
+    else
+        print_error "Failed to install backend dependencies inside virtual environment"
+        deactivate 2>/dev/null || true
         exit 1
     fi
+
+    # Deactivate venv before leaving function (other parts of the script use system commands)
+    deactivate 2>/dev/null || true
     
     cd ..
 }
@@ -169,11 +191,17 @@ verify_installation() {
         exit 1
     fi
     
-    # Check if Python packages are installed
-    if python3 -c "import fastapi, uvicorn, pydantic, numpy" 2>/dev/null; then
-        print_success "Backend dependencies verified"
+    # Check if Python packages are installed inside venv (preferred) or system python
+    if [ -d "bee-fastapi/.venv" ]; then
+        PY_CMD="bee-fastapi/.venv/bin/python"
     else
-        print_error "Backend dependencies not found"
+        PY_CMD="python3"
+    fi
+
+    if $PY_CMD -c "import fastapi, uvicorn, pydantic, numpy" 2>/dev/null; then
+        print_success "Backend dependencies verified (using $PY_CMD)"
+    else
+        print_error "Backend dependencies not found (checked with $PY_CMD)"
         exit 1
     fi
 }

@@ -236,26 +236,26 @@ export default function NewExperimentPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Pane - Data Input */}
           <div className="space-y-6">
-            <div className="card bg-base-100 shadow-xl">
+            <div className="card bg-base-100 shadow-xl border border-base-300">
               <div className="card-body">
                 <h2 className="card-title mb-4">Data Input</h2>
                 
                 {/* Input Mode Selection */}
                 <div className="mb-6 flex flex-wrap gap-2">
                   <button
-                    className={`btn ${inputMode === 'excel' ? 'btn-warning' : 'bg-base-200 text-base-content border border-base-300 hover:bg-base-300'}`}
+                    className={`btn ${inputMode === 'excel' ? 'btn-primary' : 'btn-outline'}`}
                     onClick={() => handleInputModeChange('excel')}
                   >
                     Upload File
                   </button>
                   <button
-                    className={`btn ${inputMode === 'preloaded' ? 'btn-warning' : 'bg-base-200 text-base-content border border-base-300 hover:bg-base-300'}`}
+                    className={`btn ${inputMode === 'preloaded' ? 'btn-primary' : 'btn-outline'}`}
                     onClick={() => handleInputModeChange('preloaded')}
                   >
                     Preloaded
                   </button>
                   <button
-                    className={`btn ${inputMode === 'manual' ? 'btn-warning' : 'bg-base-200 text-base-content border border-base-300 hover:bg-base-300'}`}
+                    className={`btn ${inputMode === 'manual' ? 'btn-primary' : 'btn-outline'}`}
                     onClick={() => handleInputModeChange('manual')}
                   >
                     Manual
@@ -305,7 +305,7 @@ export default function NewExperimentPage() {
                   <div className="mt-6">
                     <h3 className="text-lg font-medium mb-2">Data Preview</h3>
                     <div className="overflow-x-auto">
-                      <table className="table table-bordered table-compact w-full">
+                      <table className="table table-zebra w-full">
                         <thead>
                           <tr>
                             <th className="bg-base-200">Alt/Crit</th>
@@ -344,13 +344,13 @@ export default function NewExperimentPage() {
 
           {/* Right Pane - Parameters */}
           <div className="space-y-6">
-            <div className="card bg-base-100 shadow-xl">
+            <div className="card bg-base-100 shadow-xl border border-base-300">
               <div className="card-body">
                 <h2 className="card-title mb-4">Experiment Details</h2>
                 
                 <div className="form-control mb-4">
                   <label className="label">
-                    <span className="label-text text-stone-700">Experiment Name</span>
+                    <span className="label-text text-base-content/70">Experiment Name</span>
                   </label>
                   <input
                     type="text"

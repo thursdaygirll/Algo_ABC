@@ -14,9 +14,9 @@ export default function Navbar() {
   ];
 
   return (
-    <div className="navbar bg-black shadow-lg">
+    <div className="navbar bg-black text-base-200 shadow-lg">
       <div className="navbar-start">
-        <Link href="/" className="btn btn-ghost text-xl">
+        <Link href="/" className="btn btn-ghost text-xl text-base-200 hover:text-base-100">
           🐝 Bee Algorithm
         </Link>
       </div>
@@ -28,7 +28,7 @@ export default function Navbar() {
               <Link 
                 href={item.href}
                 title={item.label}
-                className={`btn btn-sm ${pathname === item.href ? 'btn-primary' : 'btn-ghost'}`}
+                className={`btn btn-sm ${pathname === item.href ? 'btn-primary' : 'btn-ghost text-base-400 hover:text-base-200'}`}
               >
                 {item.icon}
               </Link>
@@ -51,7 +51,7 @@ export default function Navbar() {
                 <Link 
                   href={item.href}
                   title={item.label}
-                  className={`btn w-full justify-start ${pathname === item.href ? 'btn-primary' : 'btn-ghost'}`}
+                  className={`btn w-full justify-start ${pathname === item.href ? 'btn-primary' : 'btn-ghost text-base-400 hover:text-base-200'}`}
                 >
                   <div className="flex items-center gap-3">
                     {item.icon}

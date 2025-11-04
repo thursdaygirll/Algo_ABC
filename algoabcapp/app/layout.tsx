@@ -18,6 +18,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Bee Algorithm Platform",
   description: "Advanced decision-making optimization using Artificial Bee Colony algorithms",
+  icons: {
+    icon: "/beelogo.png",
+    shortcut: "/beelogo.png",
+    apple: "/beelogo.png",
+  },
 };
 
 export default function RootLayout({
@@ -28,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-base-100 text-base-content`}
       >
         <ThemeScript />
         <Navbar />
