@@ -23,35 +23,35 @@ export default function ExperimentSteps({
       id: 1,
       title: 'Choose Data Input',
       description: 'Select how to provide your data',
-      icon: <Database className="w-4 h-4 text-primary" />,
+  icon: <Database className="w-4 h-4 text-neutral" />,
       status: currentStep >= 1 ? (inputMode ? 'completed' : 'current') : 'pending'
     },
     {
       id: 2,
       title: 'Upload/Configure Data',
       description: 'Provide your dataset',
-      icon: <Upload className="w-4 h-4 text-primary" />,
+  icon: <Upload className="w-4 h-4 text-neutral" />,
       status: currentStep >= 2 ? (hasData ? 'completed' : 'current') : 'pending'
     },
     {
       id: 3,
       title: 'Set Parameters',
       description: 'Configure algorithm settings',
-      icon: <Sliders className="w-4 h-4 text-primary" />,
+  icon: <Sliders className="w-4 h-4 text-neutral" />,
       status: currentStep >= 3 ? 'completed' : 'pending'
     },
     {
       id: 4,
       title: 'Name Experiment',
       description: 'Give your experiment a name',
-      icon: <Pencil className="w-4 h-4 text-primary" />,
+  icon: <Pencil className="w-4 h-4 text-neutral" />,
       status: currentStep >= 4 ? (hasName ? 'completed' : 'current') : 'pending'
     },
     {
       id: 5,
       title: 'Run Experiment',
       description: 'Execute the Bee Algorithm',
-      icon: <Rocket className="w-4 h-4 text-primary" />,
+  icon: <Rocket className="w-4 h-4 text-neutral" />,
       status: isRunning ? 'running' : (currentStep >= 5 ? 'completed' : 'pending')
     }
   ];
