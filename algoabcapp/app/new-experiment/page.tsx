@@ -154,7 +154,9 @@ export default function NewExperimentPage() {
           { label: 'Alternatives', value: matrix.length },
           { label: 'Criteria', value: matrix[0].length },
           { label: 'Bees', value: params.numBees },
-          { label: 'Feed Limit', value: params.feedLimit }
+          ...(params.lowerBound !== undefined ? [{ label: 'Lower Bound (lb)', value: params.lowerBound }] : []),
+          ...(params.upperBound !== undefined ? [{ label: 'Upper Bound (ub)', value: params.upperBound }] : []),
+          ...(params.objectiveFunction ? [{ label: 'Objective Function', value: params.objectiveFunction }] : []),
         ];
 
         response = {

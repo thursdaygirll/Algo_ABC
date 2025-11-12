@@ -1,10 +1,12 @@
 export type InputMode = 'excel' | 'preloaded' | 'manual';
 
 export interface BeeParams {
-  feedLimit: number;
   numBees: number;
   iterations: number;
   seed?: number;
+  lowerBound?: number; // lb
+  upperBound?: number; // ub
+  objectiveFunction?: string; // fobj identifier/name
 }
 
 export interface ExperimentInput {

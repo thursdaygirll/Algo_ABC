@@ -33,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-base-100 text-base-content`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased text-base-content`} style={{ backgroundColor: '#F5F5F5' }}
       >
         <ThemeScript />
         <Navbar />

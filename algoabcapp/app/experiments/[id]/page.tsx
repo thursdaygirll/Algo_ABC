@@ -16,10 +16,10 @@ export default function ExperimentResultsPage() {
   const [experiment, setExperiment] = useState<Experiment | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   
-  const downloadExport = async (format: 'xlsx' | 'pdf') => {
+  const downloadExport = async () => {
     if (!params.id) return;
     try {
-      const res = await fetch(`/api/export/${params.id}?format=${format}`);
+      const res = await fetch(`/api/export/${params.id}?format=xlsx`);
       if (!res.ok) {
         throw new Error(`Export failed: ${res.status}`);
       }
@@ -27,7 +27,7 @@ export default function ExperimentResultsPage() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `experiment-${params.id}.${format}`;
+      a.download = `experiment-${params.id}.xlsx`;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -165,17 +165,11 @@ export default function ExperimentResultsPage() {
             <div className="card-body">
               <h3 className="text-lg font-medium mb-4">Export Results</h3>
               <div className="flex flex-wrap gap-4">
-                <button className="btn btn-outline" onClick={() => downloadExport('xlsx')}>
+                <button className="btn btn-outline" onClick={() => downloadExport()}>
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                   Export Excel
-                </button>
-                <button className="btn btn-outline" onClick={() => downloadExport('pdf')}>
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                  </svg>
-                  Export PDF
                 </button>
               </div>
             </div>

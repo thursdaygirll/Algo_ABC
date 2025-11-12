@@ -10,6 +10,7 @@ interface ExperimentStore {
   // Actions
   setExperiments: (experiments: Experiment[]) => void;
   addExperiment: (experiment: Experiment) => void;
+  removeExperiment: (id: string) => void;
   setCurrentExperiment: (experiment: Experiment | null) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
@@ -25,6 +26,10 @@ export const useExperimentStore = create<ExperimentStore>((set) => ({
   setExperiments: (experiments) => set({ experiments }),
   addExperiment: (experiment) => set((state) => ({ 
     experiments: [...state.experiments, experiment] 
+  })),
+  removeExperiment: (id) => set((state) => ({
+    experiments: state.experiments.filter(e => e.id !== id),
+    currentExperiment: state.currentExperiment?.id === id ? null : state.currentExperiment
   })),
   setCurrentExperiment: (experiment) => set({ currentExperiment: experiment }),
   setLoading: (loading) => set({ isLoading: loading }),

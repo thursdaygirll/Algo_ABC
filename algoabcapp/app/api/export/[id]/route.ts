@@ -21,32 +21,14 @@ export async function GET(
     }
 
     const { searchParams } = new URL(request.url);
-    const format = (searchParams.get('format') || 'xlsx').toLowerCase();
-
-    if (format === 'xlsx') {
-      const buffer = generateXLSX(experiment);
-      return new Response(buffer as any, {
-        headers: {
-          'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          'Content-Disposition': `attachment; filename="experiment-${experiment.id}.xlsx"`,
-        },
-      });
-    }
-
-    if (format === 'pdf') {
-      const buffer = await generatePDF(experiment);
-      return new Response(buffer as any, {
-        headers: {
-          'Content-Type': 'application/pdf',
-          'Content-Disposition': `attachment; filename="experiment-${experiment.id}.pdf"`,
-        },
-      });
-    }
-
-    return NextResponse.json(
-      { error: 'Unsupported format' },
-      { status: 400 }
-    );
+    // Only XLSX export supported now
+    const buffer = generateXLSX(experiment);
+    return new Response(buffer as any, {
+      headers: {
+        'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'Content-Disposition': `attachment; filename="experiment-${experiment.id}.xlsx"`,
+      },
+    });
   } catch (error) {
     return NextResponse.json(
       { error: 'Failed to export experiment' },
@@ -66,7 +48,9 @@ function generateXLSX(experiment: any): Buffer {
     ['Duration (ms)', experiment.durationMs],
     ['Iterations', experiment.params?.iterations],
     ['Bees', experiment.params?.numBees],
-    ['Feed Limit', experiment.params?.feedLimit],
+    ...(experiment.params?.lowerBound !== undefined ? [['Lower Bound (lb)', experiment.params.lowerBound]] : []),
+    ...(experiment.params?.upperBound !== undefined ? [['Upper Bound (ub)', experiment.params.upperBound]] : []),
+    ...(experiment.params?.objectiveFunction ? [['Objective Function (fobj)', experiment.params.objectiveFunction]] : []),
     [],
     ['Key Performance Indicators'],
     ...(experiment.kpis || []).map((k: any) => [k.label, k.value]),
@@ -84,93 +68,33 @@ function generateXLSX(experiment: any): Buffer {
   const wsSeries = XLSX.utils.aoa_to_sheet(seriesRows);
   XLSX.utils.book_append_sheet(wb, wsSeries, 'Results');
 
+  // Metadata sheet (Spanish column descriptions)
+  const metadata: [string, string, string][] = [
+    ['ExperimentName', 'Identificador único del experimento.', 'Texto'],
+    ['Iteration', 'Número de iteración actual (1..max_iter).', 'Entero'],
+    ['Fbest', 'Mejor valor de la función objetivo encontrado hasta ahora.', 'Decimal'],
+    ['Xbest', 'Vector con los valores de la mejor solución.', 'Lista o string'],
+    ['MeanFitness', 'Promedio del fitness en la población.', 'Decimal'],
+    ['WorstFitness', 'Peor valor en la población.', 'Decimal'],
+    ['NumScouts', 'Cuántas abejas se convirtieron en scouts en esta iteración.', 'Entero'],
+    ['Diversity', 'Desviación estándar de la población (mide exploración).', 'Decimal'],
+    ['Improvement', '1 si mejoró el Fbest respecto a la iteración anterior, 0 si no.', 'Binario'],
+    ['Time (s)', 'Tiempo que tardó esta iteración en ejecutarse.', 'Decimal'],
+    ['NumBees', 'Número total de abejas (población).', 'Entero'],
+    ['TrialLimit', 'Límite de intentos antes de volverse scout (auto-calculado N*D).', 'Entero'],
+    ['Seed', 'Semilla usada para reproducibilidad.', 'Entero o vacío'],
+    ['Lower Bound (lb)', 'Valor mínimo permitido para las variables.', 'Decimal o vacío'],
+    ['Upper Bound (ub)', 'Valor máximo permitido para las variables.', 'Decimal o vacío'],
+    ['Objective Function (fobj)', 'Nombre de la función objetivo.', 'Texto'],
+  ];
+  const wsMeta = XLSX.utils.aoa_to_sheet([
+    ['Columna', 'Descripción', 'Tipo de dato'],
+    ...metadata
+  ]);
+  XLSX.utils.book_append_sheet(wb, wsMeta, 'Metadata');
+
   // Write to buffer
   const buffer = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' }) as Buffer;
   return buffer;
 }
 
-async function generatePDF(experiment: any): Promise<Buffer> {
-  return new Promise((resolve, reject) => {
-    // Dynamically require pdfkit via CommonJS to avoid ESM bundling issues with fontkit/@swc/helpers
-    // This keeps pdfkit out of the xlsx-only path and plays nicer with Turbopack.
-  // Use eval('require') to avoid Turbopack static analysis pulling ESM build (fontkit/module.mjs)
-  // and force the CommonJS build explicitly.
-  // eslint-disable-next-line @typescript-eslint/no-implied-eval
-  const dynamicRequire: NodeRequire = eval('require');
-  // Force CJS entry to avoid pdfkit.es.js and fontkit ESM path
-  const PDFDocument = dynamicRequire('pdfkit/js/pdfkit');
-
-    const doc = new PDFDocument({ size: 'A4', margin: 50 });
-    const chunks: Uint8Array[] = [];
-
-    // Theme colors approximating the bumblebee palette
-    const primary = '#facc15'; // yellow-400
-    const baseContent = '#1f2937'; // gray-800
-    const border = '#e5e7eb'; // gray-200
-
-    doc.on('data', (c: Uint8Array) => chunks.push(c));
-    doc.on('end', () => resolve(Buffer.concat(chunks)));
-    doc.on('error', reject);
-
-    // Header bar
-    doc.rect(0, 0, doc.page.width, 60).fill(primary);
-    doc
-      .fillColor('#111827')
-      .fontSize(20)
-      .text('Bee Algorithm Experiment', 50, 20, { align: 'left' });
-
-    doc.moveTo(50, 80).lineTo(doc.page.width - 50, 80).strokeColor(border).stroke();
-
-    // Summary block
-    doc.fillColor(baseContent).fontSize(12);
-    const leftX = 50;
-    let y = 100;
-
-    const addKV = (k: string, v: any) => {
-      doc.font('Helvetica-Bold').text(`${k}:`, leftX, y);
-      doc.font('Helvetica').text(String(v ?? ''), leftX + 150, y);
-      y += 18;
-    };
-
-    doc.font('Helvetica-Bold').fontSize(14).text('Summary', leftX, y);
-    y += 24;
-
-    addKV('Name', experiment.name);
-    addKV('Created', new Date(experiment.createdAt).toLocaleString());
-    addKV('Duration (ms)', experiment.durationMs);
-    addKV('Iterations', experiment.params?.iterations);
-    addKV('Bees', experiment.params?.numBees);
-    addKV('Feed Limit', experiment.params?.feedLimit);
-
-    y += 8;
-    doc.moveTo(leftX, y).lineTo(doc.page.width - 50, y).strokeColor(border).stroke();
-    y += 16;
-
-    // KPIs
-    doc.font('Helvetica-Bold').fontSize(14).text('KPIs', leftX, y);
-    y += 24;
-    doc.font('Helvetica').fontSize(12);
-    (experiment.kpis || []).forEach((k: any) => {
-      doc.text(`• ${k.label}: ${k.value}`, leftX, y);
-      y += 16;
-    });
-
-    // Results (concise top N)
-    y += 8;
-    doc.font('Helvetica-Bold').fontSize(14).text('Results (Top 20)', leftX, y);
-    y += 20;
-    doc.font('Helvetica').fontSize(11);
-    const top = Math.min(20, (experiment.resultSeries || []).length);
-    for (let i = 0; i < top; i++) {
-      const r = experiment.resultSeries[i];
-      doc.text(`It ${r.iteration}: Best ${r.bestFitness}` , leftX, y);
-      y += 14;
-      if (y > doc.page.height - 60) {
-        doc.addPage();
-        y = 50;
-      }
-    }
-
-    doc.end();
-  });
-}

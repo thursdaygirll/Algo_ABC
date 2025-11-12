@@ -1,8 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Keep heavy server-only packages external to avoid Turbopack ESM quirks
-  serverExternalPackages: ["pdfkit", "fontkit", "linebreak", "png-js"]
+  // No external server packages needed after removing PDF export
 };
 
 export default nextConfig;

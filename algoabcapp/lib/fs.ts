@@ -38,3 +38,11 @@ export async function getExperimentById(id: string): Promise<Experiment | null> 
   const experiments = await readExperiments();
   return experiments.find(exp => exp.id === id) || null;
 }
+
+export async function deleteExperimentById(id: string): Promise<boolean> {
+  const experiments = await readExperiments();
+  const next = experiments.filter(exp => exp.id !== id);
+  if (next.length === experiments.length) return false;
+  await writeExperiments(next);
+  return true;
+}

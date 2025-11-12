@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useExperimentStore } from '@/lib/store';
 
 export default function ExperimentsPage() {
-  const { experiments, setLoading } = useExperimentStore();
+  const { experiments, setLoading, removeExperiment } = useExperimentStore();
 
   useEffect(() => {
     setLoading(false);
@@ -92,13 +92,31 @@ export default function ExperimentsPage() {
                   </div>
                 </div>
 
-                <div className="card-actions justify-end">
+                <div className="card-actions justify-between items-center mt-2">
                   <Link 
                     href={`/experiments/${experiment.id}`}
                     className="btn btn-primary btn-sm"
                   >
                     View Results
                   </Link>
+                  <button
+                    className="btn btn-error btn-sm"
+                    onClick={async () => {
+                      if (!confirm('Delete this experiment?')) return;
+                      try {
+                        const res = await fetch(`/api/experiments/${experiment.id}`, { method: 'DELETE' });
+                        if (res.ok || res.status === 404) {
+                          removeExperiment(experiment.id);
+                        } else {
+                          console.error('Failed to delete experiment');
+                        }
+                      } catch (e) {
+                        console.error('Delete request failed', e);
+                      }
+                    }}
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             </div>

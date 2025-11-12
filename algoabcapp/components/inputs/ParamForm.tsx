@@ -11,10 +11,12 @@ interface ParamFormProps {
 
 export default function ParamForm({ onSubmitAction, isLoading = false }: ParamFormProps) {
   const [params, setParams] = useState<BeeParams>({
-    feedLimit: 10,
     numBees: 20,
     iterations: 50,
-    seed: undefined
+    seed: undefined,
+    lowerBound: undefined,
+    upperBound: undefined,
+    objectiveFunction: undefined,
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -31,21 +33,39 @@ export default function ParamForm({ onSubmitAction, isLoading = false }: ParamFo
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="form-control">
-        <label className="label pb-1">
-          <span className="label-text">Feed Limit</span>
-        </label>
-        <input
-          type="number"
-          min="1"
-          value={params.feedLimit}
-          onChange={(e) => updateParam('feedLimit', parseInt(e.target.value) || 1)}
-          className="input input-bordered w-full"
-          required
-        />
-        <label className="label pt-1">
-          <span className="label-text-alt">Maximum attempts before scout phase</span>
-        </label>
+      {/* Bounds */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="form-control">
+          <label className="label pb-1">
+            <span className="label-text">Lower Bound (lb)</span>
+          </label>
+          <input
+            type="number"
+            value={params.lowerBound ?? ''}
+            onChange={(e) => updateParam('lowerBound', e.target.value === '' ? undefined : Number(e.target.value))}
+            className="input input-bordered w-full"
+            placeholder="Optional"
+          />
+          <label className="label pt-1">
+            <span className="label-text-alt">Valor mínimo permitido para las variables</span>
+          </label>
+        </div>
+
+        <div className="form-control">
+          <label className="label pb-1">
+            <span className="label-text">Upper Bound (ub)</span>
+          </label>
+          <input
+            type="number"
+            value={params.upperBound ?? ''}
+            onChange={(e) => updateParam('upperBound', e.target.value === '' ? undefined : Number(e.target.value))}
+            className="input input-bordered w-full"
+            placeholder="Optional"
+          />
+          <label className="label pt-1">
+            <span className="label-text-alt">Valor máximo permitido para las variables</span>
+          </label>
+        </div>
       </div>
 
       <div className="form-control">
@@ -80,6 +100,23 @@ export default function ParamForm({ onSubmitAction, isLoading = false }: ParamFo
         />
         <label className="label pt-1">
           <span className="label-text-alt">Maximum number of iterations (1-1000)</span>
+        </label>
+      </div>
+
+      {/* Objective Function */}
+      <div className="form-control">
+        <label className="label pb-1">
+          <span className="label-text">Objective Function (fobj)</span>
+        </label>
+        <input
+          type="text"
+          value={params.objectiveFunction ?? ''}
+          onChange={(e) => updateParam('objectiveFunction', e.target.value || undefined)}
+          className="input input-bordered w-full"
+          placeholder="e.g., sphere, rastrigin, custom_f"
+        />
+        <label className="label pt-1">
+          <span className="label-text-alt">Nombre/identificador de la función objetivo</span>
         </label>
       </div>
 
