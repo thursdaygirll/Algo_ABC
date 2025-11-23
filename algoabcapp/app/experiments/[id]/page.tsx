@@ -117,6 +117,21 @@ export default function ExperimentResultsPage() {
                 value={`${(experiment.durationMs / 1000).toFixed(2)}s`}
                 subtitle="Total execution time"
               />
+              {experiment.params.lowerBound !== undefined && (
+                <StatCard title="Lower Bound (lb)" value={String(experiment.params.lowerBound)} subtitle="Límite inferior" />
+              )}
+              {experiment.params.upperBound !== undefined && (
+                <StatCard title="Upper Bound (ub)" value={String(experiment.params.upperBound)} subtitle="Límite superior" />
+              )}
+              {experiment.params.objectiveFunction && (
+                <StatCard title="Objective Function" value={String(experiment.params.objectiveFunction)} subtitle="Función objetivo" />
+              )}
+              {experiment.input.matrix && (
+                <StatCard title="Trial Limit (N*D)" value={String(experiment.params.numBees * experiment.input.matrix[0].length)} subtitle="Auto-calculado" />
+              )}
+              {experiment.params.seed !== undefined && (
+                <StatCard title="Seed" value={String(experiment.params.seed)} subtitle="Reproducibilidad" />
+              )}
             </div>
           </div>
 

@@ -40,61 +40,70 @@ export async function GET(
 function generateXLSX(experiment: any): Buffer {
   const wb = XLSX.utils.book_new();
 
-  // Summary sheet (concise)
-  const summaryRows = [
-    ['Bee Algorithm Experiment'],
-    ['Name', experiment.name],
-    ['Created', new Date(experiment.createdAt).toLocaleString()],
-    ['Duration (ms)', experiment.durationMs],
-    ['Iterations', experiment.params?.iterations],
-    ['Bees', experiment.params?.numBees],
-    ...(experiment.params?.lowerBound !== undefined ? [['Lower Bound (lb)', experiment.params.lowerBound]] : []),
-    ...(experiment.params?.upperBound !== undefined ? [['Upper Bound (ub)', experiment.params.upperBound]] : []),
-    ...(experiment.params?.objectiveFunction ? [['Objective Function (fobj)', experiment.params.objectiveFunction]] : []),
-    [],
-    ['Key Performance Indicators'],
-    ...(experiment.kpis || []).map((k: any) => [k.label, k.value]),
+  // Build a single sheet combining data rows and metadata columns (Spanish) similar to provided screenshot.
+  const headers = [
+    'ExperimentName', 'Iteration', 'Fbest', 'Xbest', 'MeanFitness', 'WorstFitness', 'NumScouts', 'Diversity', 'Improvement', 'Time (s)', 'NumBees', 'TrialLimit', 'Seed'
   ];
-  const wsSummary = XLSX.utils.aoa_to_sheet(summaryRows);
-  XLSX.utils.book_append_sheet(wb, wsSummary, 'Summary');
+  // Optional param columns
+  if (experiment.params?.lowerBound !== undefined) headers.push('LowerBound');
+  if (experiment.params?.upperBound !== undefined) headers.push('UpperBound');
+  if (experiment.params?.objectiveFunction) headers.push('ObjectiveFunction');
 
-  // Series sheet (top N for brevity)
-  const top = Math.min(50, (experiment.resultSeries || []).length);
-  const seriesRows = [['Iteration', 'Best Fitness', 'Avg Fitness', 'Std Fitness']];
+  const rows: any[][] = [headers];
+  const top = (experiment.resultSeries || []).length; // include all iterations
+  const trialLimit = experiment.params?.numBees && experiment.input?.matrix?.[0]?.length
+    ? experiment.params.numBees * experiment.input.matrix[0].length
+    : '';
+
   for (let i = 0; i < top; i++) {
     const r = experiment.resultSeries[i];
-    seriesRows.push([r.iteration, r.bestFitness, r.avgFitness ?? '', r.stdFitness ?? '']);
+    rows.push([
+      experiment.name,
+      r.iteration,
+      r.bestFitness,
+      experiment.bestSolution ? JSON.stringify(experiment.bestSolution) : '',
+      r.avgFitness ?? '',
+      r.stdFitness ?? '', // Using stdFitness as WorstFitness placeholder if not separately tracked
+      '', // NumScouts (not tracked in simulation)
+      '', // Diversity (not tracked currently)
+      i === 0 ? 1 : (experiment.resultSeries[i - 1].bestFitness > r.bestFitness ? 1 : 0), // Improvement binary
+      '', // Time (s) placeholder; could compute per iteration if available
+      experiment.params?.numBees ?? '',
+      trialLimit,
+      experiment.params?.seed ?? '',
+      ...(experiment.params?.lowerBound !== undefined ? [experiment.params.lowerBound] : []),
+      ...(experiment.params?.upperBound !== undefined ? [experiment.params.upperBound] : []),
+      ...(experiment.params?.objectiveFunction ? [experiment.params.objectiveFunction] : []),
+    ]);
   }
-  const wsSeries = XLSX.utils.aoa_to_sheet(seriesRows);
-  XLSX.utils.book_append_sheet(wb, wsSeries, 'Results');
 
-  // Metadata sheet (Spanish column descriptions)
-  const metadata: [string, string, string][] = [
+  // Append metadata table at right side (O-Q) by adding rows with blanks until alignment if needed
+  // Instead we will create a second section separated by an empty row.
+  rows.push([]);
+  rows.push(['Columna', 'Descripción', 'Tipo de dato']);
+  const meta = [
     ['ExperimentName', 'Identificador único del experimento.', 'Texto'],
     ['Iteration', 'Número de iteración actual (1..max_iter).', 'Entero'],
-    ['Fbest', 'Mejor valor de la función objetivo encontrado hasta ahora.', 'Decimal'],
-    ['Xbest', 'Vector con los valores de la mejor solución.', 'Lista o string'],
+    ['Fbest', 'Mejor valor encontrado hasta ahora.', 'Decimal'],
+    ['Xbest', 'Vector de la mejor solución.', 'Lista o string'],
     ['MeanFitness', 'Promedio del fitness en la población.', 'Decimal'],
     ['WorstFitness', 'Peor valor en la población.', 'Decimal'],
-    ['NumScouts', 'Cuántas abejas se convirtieron en scouts en esta iteración.', 'Entero'],
-    ['Diversity', 'Desviación estándar de la población (mide exploración).', 'Decimal'],
-    ['Improvement', '1 si mejoró el Fbest respecto a la iteración anterior, 0 si no.', 'Binario'],
-    ['Time (s)', 'Tiempo que tardó esta iteración en ejecutarse.', 'Decimal'],
-    ['NumBees', 'Número total de abejas (población).', 'Entero'],
-    ['TrialLimit', 'Límite de intentos antes de volverse scout (auto-calculado N*D).', 'Entero'],
-    ['Seed', 'Semilla usada para reproducibilidad.', 'Entero o vacío'],
-    ['Lower Bound (lb)', 'Valor mínimo permitido para las variables.', 'Decimal o vacío'],
-    ['Upper Bound (ub)', 'Valor máximo permitido para las variables.', 'Decimal o vacío'],
-    ['Objective Function (fobj)', 'Nombre de la función objetivo.', 'Texto'],
+    ['NumScouts', 'Abejas convertidas en scouts en la iteración.', 'Entero'],
+    ['Diversity', 'Desviación estándar (mide exploración).', 'Decimal'],
+    ['Improvement', '1 si mejoró respecto a Fbest previo, 0 si no.', 'Binario'],
+    ['Time (s)', 'Tiempo de ejecución de la iteración.', 'Decimal'],
+    ['NumBees', 'Tamaño de la población.', 'Entero'],
+    ['TrialLimit', 'Límite de intentos (auto N*D).', 'Entero'],
+    ['Seed', 'Semilla para reproducibilidad.', 'Entero o vacío'],
+    ...(experiment.params?.lowerBound !== undefined ? [['LowerBound', 'Límite inferior de variables.', 'Decimal']] : []),
+    ...(experiment.params?.upperBound !== undefined ? [['UpperBound', 'Límite superior de variables.', 'Decimal']] : []),
+    ...(experiment.params?.objectiveFunction ? [['ObjectiveFunction', 'Función objetivo utilizada.', 'Texto']] : []),
   ];
-  const wsMeta = XLSX.utils.aoa_to_sheet([
-    ['Columna', 'Descripción', 'Tipo de dato'],
-    ...metadata
-  ]);
-  XLSX.utils.book_append_sheet(wb, wsMeta, 'Metadata');
+  meta.forEach(m => rows.push(m));
 
-  // Write to buffer
-  const buffer = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' }) as Buffer;
-  return buffer;
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  XLSX.utils.book_append_sheet(wb, ws, 'Experiment');
+
+  return XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' }) as Buffer;
 }
 

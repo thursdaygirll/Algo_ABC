@@ -46,12 +46,33 @@ export default function ExperimentMetaCard({ experiment }: ExperimentMetaCardPro
             <span>{experiment.params.numBees}</span>
           </div>
           
-          <div className="flex justify-between">
-            <span className="font-medium">Feed Limit:</span>
-            <span>{experiment.params.feedLimit}</span>
-          </div>
+          {experiment.params.lowerBound !== undefined && (
+            <div className="flex justify-between">
+              <span className="font-medium">Lower Bound (lb):</span>
+              <span>{experiment.params.lowerBound}</span>
+            </div>
+          )}
+          {experiment.params.upperBound !== undefined && (
+            <div className="flex justify-between">
+              <span className="font-medium">Upper Bound (ub):</span>
+              <span>{experiment.params.upperBound}</span>
+            </div>
+          )}
+          {experiment.params.objectiveFunction && (
+            <div className="flex justify-between">
+              <span className="font-medium">Objective Function:</span>
+              <span>{experiment.params.objectiveFunction}</span>
+            </div>
+          )}
+          {/* TrialLimit derived (N*D) */}
+          {experiment.input.matrix && (
+            <div className="flex justify-between">
+              <span className="font-medium">Trial Limit (N*D):</span>
+              <span>{experiment.params.numBees * experiment.input.matrix[0].length}</span>
+            </div>
+          )}
           
-          {experiment.params.seed && (
+          {experiment.params.seed !== undefined && (
             <div className="flex justify-between">
               <span className="font-medium">Seed:</span>
               <span>{experiment.params.seed}</span>
