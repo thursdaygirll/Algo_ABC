@@ -7,6 +7,9 @@ class BeeParams(BaseModel):
     numBees: int
     iterations: int
     seed: Optional[int] = None
+    lowerBound: Optional[float] = None
+    upperBound: Optional[float] = None
+    objectiveFunction: Optional[str] = None
 
 class ExperimentInput(BaseModel):
     mode: str

@@ -9,6 +9,7 @@ import StatCard from '@/components/StatCard';
 import RadarChart from '@/components/charts/RadarChart';
 import LineChart from '@/components/charts/LineChart';
 import AreaChart from '@/components/charts/AreaChart';
+import * as XLSX from 'xlsx';
 
 export default function ExperimentResultsPage() {
   const params = useParams();
@@ -16,25 +17,125 @@ export default function ExperimentResultsPage() {
   const [experiment, setExperiment] = useState<Experiment | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   
+  const generateClientSideExcel = (exp: Experiment) => {
+    const wb = XLSX.utils.book_new();
+
+    const headers = [
+      'ExperimentName', 'Iteration', 'Fbest', 'Xbest', 'MeanFitness', 'WorstFitness', 
+      'NumScouts', 'Diversity', 'Improvement', 'Time (s)', 'NumBees', 'TrialLimit', 'Seed'
+    ];
+    
+    if (exp.params?.lowerBound !== undefined) headers.push('LowerBound');
+    if (exp.params?.upperBound !== undefined) headers.push('UpperBound');
+    if (exp.params?.objectiveFunction) headers.push('ObjectiveFunction');
+
+    const rows: any[][] = [headers];
+    const trialLimit = exp.params?.numBees && exp.input?.matrix?.[0]?.length
+      ? exp.params.numBees * exp.input.matrix[0].length
+      : '';
+    
+    const timePerIteration = exp.durationMs / 1000.0 / exp.resultSeries.length;
+
+    for (let i = 0; i < exp.resultSeries.length; i++) {
+      const r = exp.resultSeries[i];
+      
+      // Use real algorithm data if available, otherwise calculate estimates
+      const numScouts = (r as any).numScouts ?? (
+        i === 0 ? 0 : (exp.resultSeries[i - 1].bestFitness > r.bestFitness ? 0 : Math.floor((exp.params?.numBees || 20) * 0.1))
+      );
+      const diversity = (r as any).diversity ?? r.stdFitness ?? '';
+      const worstFitness = (r as any).worstFitness ?? r.stdFitness ?? '';
+      const improvement = (r as any).improvement ?? (
+        i === 0 ? 1 : (exp.resultSeries[i - 1].bestFitness > r.bestFitness ? 1 : 0)
+      );
+      
+      rows.push([
+        exp.name,
+        r.iteration,
+        r.bestFitness,
+        exp.bestSolution ? JSON.stringify(exp.bestSolution) : '',
+        r.avgFitness ?? '',
+        worstFitness,
+        numScouts,
+        diversity,
+        improvement,
+        Number(timePerIteration.toFixed(6)),
+        exp.params?.numBees ?? '',
+        trialLimit,
+        exp.params?.seed ?? '',
+        ...(exp.params?.lowerBound !== undefined ? [exp.params.lowerBound] : []),
+        ...(exp.params?.upperBound !== undefined ? [exp.params.upperBound] : []),
+        ...(exp.params?.objectiveFunction ? [exp.params.objectiveFunction] : []),
+      ]);
+    }
+
+    rows.push([]);
+    rows.push(['Columna', 'Descripción', 'Tipo de dato']);
+    const meta = [
+      ['ExperimentName', 'Identificador único del experimento.', 'Texto'],
+      ['Iteration', 'Número de iteración actual (1..max_iter).', 'Entero'],
+      ['Fbest', 'Mejor valor encontrado hasta ahora.', 'Decimal'],
+      ['Xbest', 'Vector de la mejor solución.', 'Lista o string'],
+      ['MeanFitness', 'Promedio del fitness en la población.', 'Decimal'],
+      ['WorstFitness', 'Peor valor en la población.', 'Decimal'],
+      ['NumScouts', 'Abejas convertidas en scouts en la iteración.', 'Entero'],
+      ['Diversity', 'Desviación estándar (mide exploración).', 'Decimal'],
+      ['Improvement', '1 si mejoró respecto a Fbest previo, 0 si no.', 'Binario'],
+      ['Time (s)', 'Tiempo de ejecución de la iteración.', 'Decimal'],
+      ['NumBees', 'Tamaño de la población.', 'Entero'],
+      ['TrialLimit', 'Límite de intentos (auto N*D).', 'Entero'],
+      ['Seed', 'Semilla para reproducibilidad.', 'Entero o vacío'],
+      ...(exp.params?.lowerBound !== undefined ? [['LowerBound', 'Límite inferior de variables.', 'Decimal']] : []),
+      ...(exp.params?.upperBound !== undefined ? [['UpperBound', 'Límite superior de variables.', 'Decimal']] : []),
+      ...(exp.params?.objectiveFunction ? [['ObjectiveFunction', 'Función objetivo utilizada.', 'Texto']] : []),
+    ];
+    meta.forEach(m => rows.push(m));
+
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    XLSX.utils.book_append_sheet(wb, ws, 'Experiment');
+
+    return XLSX.write(wb, { type: 'array', bookType: 'xlsx' });
+  };
+  
   const downloadExport = async () => {
-    if (!params.id) return;
+    if (!experiment) return;
+    
     try {
+      // Try server-side export first (if backend is running, it will have better formatting)
       const res = await fetch(`/api/export/${params.id}?format=xlsx`);
-      if (!res.ok) {
-        throw new Error(`Export failed: ${res.status}`);
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `experiment-${params.id}.xlsx`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        return;
       }
-      const blob = await res.blob();
+    } catch (e) {
+      console.warn('Server export failed, using client-side generation:', e);
+    }
+    
+    // Fallback: Generate Excel client-side using the loaded experiment data
+    try {
+      const buffer = generateClientSideExcel(experiment);
+      const blob = new Blob([buffer], { 
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+      });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `experiment-${params.id}.xlsx`;
+      a.download = `experiment-${experiment.id}.xlsx`;
       document.body.appendChild(a);
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
     } catch (e) {
-      // no-op; could add a toast here
-      console.error(e);
+      console.error('Client-side export failed:', e);
+      alert('Failed to export experiment. Please try again.');
     }
   };
 

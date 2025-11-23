@@ -5,13 +5,31 @@ import * as XLSX from 'xlsx';
 // Ensure this route runs on the Node.js runtime (PDFKit requires Node streams)
 export const runtime = 'nodejs';
 
+const BEE_API_URL = process.env.NEXT_PUBLIC_BEE_API || 'http://localhost:8001';
+
 export async function GET(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await context.params;
-    const experiment = await getExperimentById(id);
+    
+    // Try to get experiment from FastAPI backend first
+    let experiment = null;
+    
+    try {
+      const backendResponse = await fetch(`${BEE_API_URL}/experiments/${id}`);
+      if (backendResponse.ok) {
+        experiment = await backendResponse.json();
+      }
+    } catch (e) {
+      console.warn('Backend not available, trying local filesystem:', e);
+    }
+    
+    // Fallback to local filesystem if backend fails
+    if (!experiment) {
+      experiment = await getExperimentById(id);
+    }
     
     if (!experiment) {
       return NextResponse.json(
@@ -21,7 +39,34 @@ export async function GET(
     }
 
     const { searchParams } = new URL(request.url);
-    // Only XLSX export supported now
+    const format = searchParams.get('format') || 'xlsx';
+    
+    // Try FastAPI backend for Excel export if configured
+    if (format === 'xlsx') {
+      try {
+        const backendResponse = await fetch(`${BEE_API_URL}/export/${id}/excel`, {
+          method: 'GET',
+        });
+        
+        if (backendResponse.ok) {
+          // Stream the file from backend to client
+          const buffer = await backendResponse.arrayBuffer();
+          return new Response(buffer, {
+            headers: {
+              'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+              'Content-Disposition': `attachment; filename="experiment-${id}.xlsx"`,
+            },
+          });
+        }
+        
+        // If backend fails, fall back to client-side generation
+        console.warn('Backend export failed, falling back to client-side generation');
+      } catch (backendError) {
+        console.warn('Backend not available, using client-side export:', backendError);
+      }
+    }
+    
+    // Fallback: client-side XLSX generation
     const buffer = generateXLSX(experiment);
     return new Response(buffer as any, {
       headers: {

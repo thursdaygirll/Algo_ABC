@@ -66,6 +66,23 @@ REQUIRED_ORDER: List[str] = [
     "Seed",
 ]
 
+# Column descriptions and data types from specification
+COLUMN_SPECS = {
+    "ExperimentName": {"description": "Unique identifier of the experiment.", "type": "Text"},
+    "Iteration": {"description": "Current iteration number (1...max_iter).", "type": "Integer"},
+    "Fbest": {"description": "Best value of the objective function found so far.", "type": "Decimal"},
+    "Xbest": {"description": "Vector with the values of the best solution.", "type": "List or string"},
+    "MeanFitness": {"description": "Average fitness of the population.", "type": "Decimal"},
+    "WorstFitness": {"description": "Worst value in the population.", "type": "Decimal"},
+    "NumScouts": {"description": "How many bees became scouts in this iteration.", "type": "Integer"},
+    "Diversity": {"description": "Standard deviation of the population (measures exploration).", "type": "Decimal"},
+    "Improvement": {"description": "1 if Fbest improved compared to the previous iteration, 0 if not.", "type": "Binary"},
+    "Time (s)": {"description": "Time taken for this iteration to execute.", "type": "Decimal"},
+    "NumBees": {"description": "Total number of bees (population).", "type": "Integer"},
+    "TrialLimit": {"description": "Limit of attempts before becoming a scout.", "type": "Integer"},
+    "Seed": {"description": "Seed used for reproducibility.", "type": "Integer or empty"},
+}
+
 TemplateLike = Union[List[Dict[str, Any]], "pd.DataFrame"]  # type: ignore
 
 __all__ = ["export_results_to_excel"]

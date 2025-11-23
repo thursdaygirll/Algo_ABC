@@ -1,1 +1,478 @@
-[]
+[
+  {
+    "id": "1763936112606",
+    "name": "Test2Checkforexcelexport",
+    "createdAt": "2025-11-23T22:15:12.606Z",
+    "durationMs": 0,
+    "params": {
+      "numBees": 20,
+      "iterations": 50
+    },
+    "input": {
+      "mode": "preloaded",
+      "datasetName": "sample-10x10",
+      "matrix": [
+        [
+          0.0381881513352017,
+          0.41570887724041217,
+          0.5586717038686217,
+          0.32200130401203,
+          0.6939404517430375,
+          0.7707553089584294,
+          0.24781957805507404,
+          0.14774237570815152,
+          0.14499416935211717,
+          0.44994502695726113
+        ],
+        [
+          0.1450843154850323,
+          0.5464008887854611,
+          0.5849233119750908,
+          0.11608433550311803,
+          0.6618745482899372,
+          0.45032617801898656,
+          0.5976146770501904,
+          0.1778940885557707,
+          0.6727023242298424,
+          0.6302699003814569
+        ],
+        [
+          0.28977504710532553,
+          0.020806661872574628,
+          0.6714796892394413,
+          0.007928213428842201,
+          0.279124013420171,
+          0.6778945815629241,
+          0.526060512444527,
+          0.13664973241059397,
+          0.6159845860127333,
+          0.6993560848114837
+        ],
+        [
+          0.37721160713554636,
+          0.2930994744256763,
+          0.5130576681400152,
+          0.3225005393909395,
+          0.4080713659931229,
+          0.2239764945964221,
+          0.9599812798563123,
+          0.7525875625399374,
+          0.8781869214581127,
+          0.11157658552309468
+        ],
+        [
+          0.9037293321928512,
+          0.7438651647663128,
+          0.21070902644367218,
+          0.9622027267730247,
+          0.6178654867979066,
+          0.665955753070448,
+          0.43964258062633876,
+          0.25003702703265673,
+          0.032075669951180386,
+          0.8287465107222146
+        ],
+        [
+          0.3035230122866772,
+          0.6541722113844111,
+          0.47100610395106335,
+          0.3734502198604993,
+          0.6342752600730445,
+          0.8026458251988418,
+          0.43146753372537305,
+          0.049834214062035365,
+          0.21803466481725786,
+          0.9537448655909481
+        ],
+        [
+          0.2836774044680359,
+          0.6480026363066496,
+          0.8213633593263537,
+          0.6473692441915663,
+          0.9995422997146272,
+          0.8244662924187814,
+          0.631676382049856,
+          0.8628832913243526,
+          0.22957709784860703,
+          0.09215020468251944
+        ],
+        [
+          0.0668995661889491,
+          0.9035349944485987,
+          0.3283084195031445,
+          0.40492794891740824,
+          0.3927503038104272,
+          0.7002335416047168,
+          0.7715680496771651,
+          0.8954857946710824,
+          0.08832993644898057,
+          0.6950383495063025
+        ],
+        [
+          0.36387383673767126,
+          0.7501983851064675,
+          0.9085058522037874,
+          0.5571393548715202,
+          0.2831893182816625,
+          0.4473087435417754,
+          0.03316190210280601,
+          0.06785266642947818,
+          0.0926575728733654,
+          0.5576558747055221
+        ],
+        [
+          0.9755794260513491,
+          0.6681986881634565,
+          0.4306032939579043,
+          0.5934138683852545,
+          0.7609535730886875,
+          0.1774899327646331,
+          0.023946274775884624,
+          0.7318154052317826,
+          0.13161666541584327,
+          0.8983851070902176
+        ]
+      ]
+    },
+    "kpis": [
+      {
+        "label": "Best fitness",
+        "value": 71.153716
+      },
+      {
+        "label": "Iterations",
+        "value": 50
+      },
+      {
+        "label": "Convergence",
+        "value": 28.595163
+      },
+      {
+        "label": "Alternatives",
+        "value": 10
+      },
+      {
+        "label": "Criteria",
+        "value": 10
+      },
+      {
+        "label": "Bees",
+        "value": 20
+      }
+    ],
+    "bestSolution": [
+      0.18214836457843298,
+      0.39914063001980304,
+      0.5048978076366464,
+      0.21130976894159803,
+      0.220376558227802,
+      0.9836721372031745,
+      0.0415138942693184,
+      0.9519643796425098,
+      0.06262861616283244,
+      0.9151289509573538
+    ],
+    "resultSeries": [
+      {
+        "iteration": 1,
+        "bestFitness": 99.748879,
+        "avgFitness": 100.100943,
+        "stdFitness": 0.026685
+      },
+      {
+        "iteration": 2,
+        "bestFitness": 99.416843,
+        "avgFitness": 100.230834,
+        "stdFitness": 0.129502
+      },
+      {
+        "iteration": 3,
+        "bestFitness": 98.753728,
+        "avgFitness": 99.05828,
+        "stdFitness": 0.135478
+      },
+      {
+        "iteration": 4,
+        "bestFitness": 97.768892,
+        "avgFitness": 98.449107,
+        "stdFitness": 0.193221
+      },
+      {
+        "iteration": 5,
+        "bestFitness": 97.501266,
+        "avgFitness": 98.212533,
+        "stdFitness": 0.072338
+      },
+      {
+        "iteration": 6,
+        "bestFitness": 97.284222,
+        "avgFitness": 97.518527,
+        "stdFitness": 0.033607
+      },
+      {
+        "iteration": 7,
+        "bestFitness": 96.423782,
+        "avgFitness": 97.416837,
+        "stdFitness": 0.035846
+      },
+      {
+        "iteration": 8,
+        "bestFitness": 96.211648,
+        "avgFitness": 96.948084,
+        "stdFitness": 0.107726
+      },
+      {
+        "iteration": 9,
+        "bestFitness": 95.914591,
+        "avgFitness": 96.721437,
+        "stdFitness": 0.115596
+      },
+      {
+        "iteration": 10,
+        "bestFitness": 95.57238,
+        "avgFitness": 96.348606,
+        "stdFitness": 0.188882
+      },
+      {
+        "iteration": 11,
+        "bestFitness": 95.288438,
+        "avgFitness": 95.938727,
+        "stdFitness": 0.163959
+      },
+      {
+        "iteration": 12,
+        "bestFitness": 94.802286,
+        "avgFitness": 94.971321,
+        "stdFitness": 0.052225
+      },
+      {
+        "iteration": 13,
+        "bestFitness": 94.552767,
+        "avgFitness": 94.870902,
+        "stdFitness": 0.110133
+      },
+      {
+        "iteration": 14,
+        "bestFitness": 93.625061,
+        "avgFitness": 93.927306,
+        "stdFitness": 0.11237
+      },
+      {
+        "iteration": 15,
+        "bestFitness": 93.245559,
+        "avgFitness": 93.326339,
+        "stdFitness": 0.14632
+      },
+      {
+        "iteration": 16,
+        "bestFitness": 92.309842,
+        "avgFitness": 93.016794,
+        "stdFitness": 0.103807
+      },
+      {
+        "iteration": 17,
+        "bestFitness": 91.312263,
+        "avgFitness": 91.982655,
+        "stdFitness": 0.137629
+      },
+      {
+        "iteration": 18,
+        "bestFitness": 90.680433,
+        "avgFitness": 90.83418,
+        "stdFitness": 0.017775
+      },
+      {
+        "iteration": 19,
+        "bestFitness": 89.79192,
+        "avgFitness": 90.032004,
+        "stdFitness": 0.185288
+      },
+      {
+        "iteration": 20,
+        "bestFitness": 89.08478,
+        "avgFitness": 89.786491,
+        "stdFitness": 0.078395
+      },
+      {
+        "iteration": 21,
+        "bestFitness": 88.463597,
+        "avgFitness": 88.568774,
+        "stdFitness": 0.154532
+      },
+      {
+        "iteration": 22,
+        "bestFitness": 88.098903,
+        "avgFitness": 88.987813,
+        "stdFitness": 0.031309
+      },
+      {
+        "iteration": 23,
+        "bestFitness": 87.506238,
+        "avgFitness": 87.606459,
+        "stdFitness": 0.109968
+      },
+      {
+        "iteration": 24,
+        "bestFitness": 86.734179,
+        "avgFitness": 87.463338,
+        "stdFitness": 0.076902
+      },
+      {
+        "iteration": 25,
+        "bestFitness": 86.030565,
+        "avgFitness": 86.377579,
+        "stdFitness": 0.14394
+      },
+      {
+        "iteration": 26,
+        "bestFitness": 85.113729,
+        "avgFitness": 85.777288,
+        "stdFitness": 0.085465
+      },
+      {
+        "iteration": 27,
+        "bestFitness": 84.592459,
+        "avgFitness": 85.143907,
+        "stdFitness": 0.194001
+      },
+      {
+        "iteration": 28,
+        "bestFitness": 84.309525,
+        "avgFitness": 84.751455,
+        "stdFitness": 0.158001
+      },
+      {
+        "iteration": 29,
+        "bestFitness": 83.51583,
+        "avgFitness": 83.716014,
+        "stdFitness": 0.031317
+      },
+      {
+        "iteration": 30,
+        "bestFitness": 82.804965,
+        "avgFitness": 82.918067,
+        "stdFitness": 0.174133
+      },
+      {
+        "iteration": 31,
+        "bestFitness": 82.432109,
+        "avgFitness": 82.646572,
+        "stdFitness": 0.003742
+      },
+      {
+        "iteration": 32,
+        "bestFitness": 81.938138,
+        "avgFitness": 82.250905,
+        "stdFitness": 0.177467
+      },
+      {
+        "iteration": 33,
+        "bestFitness": 81.210966,
+        "avgFitness": 81.363556,
+        "stdFitness": 0.120693
+      },
+      {
+        "iteration": 34,
+        "bestFitness": 80.838436,
+        "avgFitness": 81.133018,
+        "stdFitness": 0.042021
+      },
+      {
+        "iteration": 35,
+        "bestFitness": 79.945546,
+        "avgFitness": 80.848562,
+        "stdFitness": 0.017148
+      },
+      {
+        "iteration": 36,
+        "bestFitness": 79.741029,
+        "avgFitness": 80.360008,
+        "stdFitness": 0.179319
+      },
+      {
+        "iteration": 37,
+        "bestFitness": 79.095424,
+        "avgFitness": 79.573969,
+        "stdFitness": 0.194275
+      },
+      {
+        "iteration": 38,
+        "bestFitness": 78.393082,
+        "avgFitness": 78.902646,
+        "stdFitness": 0.006535
+      },
+      {
+        "iteration": 39,
+        "bestFitness": 77.738962,
+        "avgFitness": 78.524784,
+        "stdFitness": 0.162613
+      },
+      {
+        "iteration": 40,
+        "bestFitness": 77.155511,
+        "avgFitness": 77.344158,
+        "stdFitness": 0.029145
+      },
+      {
+        "iteration": 41,
+        "bestFitness": 76.558803,
+        "avgFitness": 77.542488,
+        "stdFitness": 0.104324
+      },
+      {
+        "iteration": 42,
+        "bestFitness": 75.553992,
+        "avgFitness": 76.029871,
+        "stdFitness": 0.108323
+      },
+      {
+        "iteration": 43,
+        "bestFitness": 74.847929,
+        "avgFitness": 75.752223,
+        "stdFitness": 0.072001
+      },
+      {
+        "iteration": 44,
+        "bestFitness": 74.509378,
+        "avgFitness": 75.005857,
+        "stdFitness": 0.023459
+      },
+      {
+        "iteration": 45,
+        "bestFitness": 74.232827,
+        "avgFitness": 75.025864,
+        "stdFitness": 0.009911
+      },
+      {
+        "iteration": 46,
+        "bestFitness": 73.568908,
+        "avgFitness": 74.002009,
+        "stdFitness": 0.059094
+      },
+      {
+        "iteration": 47,
+        "bestFitness": 73.04839,
+        "avgFitness": 74.004392,
+        "stdFitness": 0.117027
+      },
+      {
+        "iteration": 48,
+        "bestFitness": 72.142047,
+        "avgFitness": 72.714501,
+        "stdFitness": 0.041734
+      },
+      {
+        "iteration": 49,
+        "bestFitness": 71.896122,
+        "avgFitness": 72.649046,
+        "stdFitness": 0.102968
+      },
+      {
+        "iteration": 50,
+        "bestFitness": 71.153716,
+        "avgFitness": 71.233419,
+        "stdFitness": 0.001
+      }
+    ]
+  }
+]
